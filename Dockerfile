@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the ports for Streamlit and the HTML files
-EXPOSE 8501 8502 8503
+EXPOSE 8501 8502 
 
 # Start Streamlit and serve the HTML files
 # CMD sh -c "streamlit run app.py & python -m http.server 8502 --directory /app --bind 0.0.0.0 --file prediction_report.html & python -m http.server 8503 --directory /app --bind 0.0.0.0 --file app.html"
-CMD sh -c "streamlit run app_images.py & python -m http.server 8502 --directory /app --bind 0.0.0.0 & python -m http.server 8503 --directory /app --bind 0.0.0.0"
+CMD sh -c "streamlit run app_images.py & python -m http.server 8502 --directory /app --bind 0.0.0.0"
