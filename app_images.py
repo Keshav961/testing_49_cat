@@ -14,7 +14,7 @@ model = tf.keras.models.load_model("49_categories.h5")
 
 # Define class names
 class_names = [
-    'BATTERY-BATTERY-BATTERY',
+ 'BATTERY-BATTERY-BATTERY',
  'BEARING-WHEEL BEARING-FRONT WHEEL HUB',
  'BEARING-WHEEL BEARING-REAR WHEEL HUB ASSEMBLY',
  'BODY PARTS-BODY TRIM-FOG LAMP COVER',
@@ -62,7 +62,8 @@ class_names = [
  'SUSPENSION-SHOCK ABSORBER-REAR SHOCK ABSORBER',
  'TRANSMISSION-TORQUE CONVERTER-TORQUE CONVERTER',
  'WHEELS AND TYRES-RIMS AND ALLOYS-WHEEL RIM',
- 'WIPER SYSTEM-WIPER BLADE-WIPER BLADE']
+ 'WIPER SYSTEM-WIPER BLADE-WIPER BLADE'
+]
 
 # Create folder to store images for analysis
 os.makedirs("saved_images", exist_ok=True)
@@ -88,7 +89,7 @@ if uploaded_files:
     cols = st.columns(5)  # Display images in 5 columns
 
     for idx, uploaded_file in enumerate(uploaded_files):
-        img = Image.open(uploaded_file)
+        img = Image.open(uploaded_file).convert("RGB")  # Fix for RGBA issue (PNG images)
         img_resized = img.resize((224, 224))
         img_array = image.img_to_array(img_resized) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
@@ -116,7 +117,7 @@ if uploaded_files:
     df_results = pd.concat([df_results, df_new], ignore_index=True)
     df_results.to_csv(csv_file, index=False)
 
-    st.success("Results saved to `results.csv` 📁")
+    st.success("Results saved to results.csv 📁")
 
     # Display structured results
     st.subheader("📊 Prediction Results")
@@ -142,15 +143,15 @@ if uploaded_files:
     with open("prediction_report.html", "rb") as f:
         st.download_button("📄 Download Report", f, file_name="prediction_report.html", mime="text/html")
 
-      # Provide a download button for the CSV file
-        st.subheader("📥 Download Predictions CSV")
-        csv_data = df_results.to_csv(index=False).encode('utf-8')
-        st.download_button(
-          label="📄 Download CSV File",
-          data=csv_data,
-          file_name="classification_results.csv",
-          mime="text/csv",
-)
+    # Provide a download button for the CSV file
+    st.subheader("📥 Download Predictions CSV")
+    csv_data = df_results.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="📄 Download CSV File",
+        data=csv_data,
+        file_name="classification_results.csv",
+        mime="text/csv",
+    )
 
     # Confusion Matrix
     if "True Label" in df_results.columns:
